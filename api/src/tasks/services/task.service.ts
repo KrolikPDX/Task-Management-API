@@ -12,15 +12,18 @@ export class TaskService {
         private readonly taskRepository: Repository<TaskEntity> 
     ) {}
 
+    //Save given task to the DB
     createTask(task: TaskModel): Observable<TaskModel> {
-        return from(this.taskRepository.save(task)); //Save given task to db, convert return value from promise to TaskModel object
+        return from(this.taskRepository.save(task)); //Convert returned value from promise to TaskModel object
     }
 
-    getAllTasks(): Observable<TaskModel[]> {
-        return from(this.taskRepository.find())
+    //Return all tasks found in DB
+    getAllTasks(): Observable<TaskModel[]> { 
+        return from(this.taskRepository.find()) 
     }
 
-    getTaskByTitle(title: string) {
-        
+    //Return specific task found in DB by title
+    getTaskById(id: number): Observable<TaskModel | null> {
+        return from(this.taskRepository.findOne({ where: { id } }));
     }
 }

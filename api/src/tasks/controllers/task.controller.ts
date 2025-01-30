@@ -1,21 +1,34 @@
-import { Controller, Get, Post, Body, NotFoundException, BadRequestException } from '@nestjs/common';
+import { Controller, Get, Post, Body, NotFoundException, BadRequestException, Param } from '@nestjs/common';
 import { TaskService } from '../services/task.service';
 import { TaskModel } from '../models/task.interface';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
+import { get } from 'http';
 
 @Controller('task')
 export class TaskController {
-    constructor(private taskService: TaskService) {} //TaskService = backend of creating a task
+    constructor(private taskService: TaskService) {}
 
-    @Post() 
+    @Post() //Creates new task and adds it to DB
     create(@Body() task: TaskModel): Observable<TaskModel> { //From the body of the request, create a task given the object
         if (!task.title) throw new BadRequestException('Title is a required field.');
         if (!task.description) throw new BadRequestException('Description is a required field.');
         return this.taskService.createTask(task)
     }
 
-    @Get("all")
-    get(): Observable<TaskModel[]> {
+    @Get() //Returns list of all tasks
+    getAllTasks(): Observable<TaskModel[]> {
         return this.taskService.getAllTasks();
+    }
+
+    @Get(':id') //Returns information about specified task 
+    getTaskByTitle(@Param('id') id: number): Observable<TaskModel | null> {
+        return this.taskService.getTaskById(id).pipe(
+            map((task) => {
+                if (!task) {
+                throw new NotFoundException(`Task with ID '${id}' not found`);
+                }
+                return task; 
+            }),
+        );
     }
 }

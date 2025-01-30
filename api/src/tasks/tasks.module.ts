@@ -8,7 +8,7 @@ import { TaskController } from './controllers/task.controller';
   imports: [
     TypeOrmModule.forFeature([TaskEntity])
   ],
-  controllers: [TaskController],
-  providers: [TaskService]
+  controllers: [TaskController], //Controllers setup endpoints, handle request/response logic
+  providers: [TaskService] //Services handle business logic (i.e. interact with DB - data processing, data fetching, etc)
 })
 export class TasksModule {}

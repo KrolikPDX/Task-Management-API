@@ -8,7 +8,7 @@ import { TasksModule } from './tasks/tasks.module';
 @Module({
   imports: [
     ConfigModule.forRoot({isGlobal: true}), //Allows env vars from .env to be accessible as process.env
-    TypeOrmModule.forRoot({ //Mature Object Relational Mapper - Used in NestJS to to abstract interactions with DBs
+    TypeOrmModule.forRoot({ //TypeOrm Module enables connection with DBs and entity management
       type: 'postgres',
       host: process.env.POSTGRES_HOST,
       port: parseInt(<string>process.env.POSTGRES_PORT), 
@@ -23,6 +23,6 @@ import { TasksModule } from './tasks/tasks.module';
     TasksModule
   ],
   controllers: [AppController], //Controllers handles logic between requests/responses
-  providers: [AppService], //Services handle business logic (i.e. interact with DB)
+  providers: [AppService], 
 })
 export class AppModule {}
