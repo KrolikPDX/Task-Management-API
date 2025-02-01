@@ -1,28 +1,39 @@
 import { useEffect, useState } from "react";
 import TaskItem from "./TaskItem";
-
-interface TaskProp {
-  id: number;
-  title: string;
-  description: string;
-  completed: boolean;
-}
+import TaskModel from "../interfaces/TaskModel";
 
 function TaskList() {
-  const [tasks, setTasks] = useState<TaskProp[]>([]);
+  const [tasks, setTasks] = useState<TaskModel[]>([]);
 
   useEffect(() => {
     const fetchTasks = async () => {
+      //Add into try catch statement incase of failure in future
       const response = await fetch("http://localhost:3000/api/task");
-      if (!response.ok) throw new Error("Fail TEST");
 
-      const data: TaskProp[] = await response.json();
+      const data: TaskModel[] = await response.json();
       setTasks(data);
-      console.log(data);
     };
 
     fetchTasks();
   }, []);
+
+  const handleLogTasks = () => {
+    console.log("Logging all task values:");
+    tasks.forEach((task) => {
+      console.log(
+        `Task ID: ${task.id}, Title: ${task.title}, Completed: ${task.completed}`
+      );
+    });
+  };
+
+  //Handle changes from child component (TaskItem)
+  const handleTaskCompletionChange = (taskId: number, completed: boolean) => {
+    setTasks((prevTasks) =>
+      prevTasks.map((task) =>
+        task.id === taskId ? { ...task, completed } : task
+      )
+    );
+  };
 
   return (
     <>
@@ -33,11 +44,21 @@ function TaskList() {
         ) : (
           <ul className="list-group">
             {tasks.map((task) => (
-              <TaskItem key={task.id} {...task} />
+              <TaskItem
+                key={task.id}
+                {...task}
+                onCheckboxChange={handleTaskCompletionChange}
+              />
             ))}
           </ul>
         )}
       </div>
+      <button
+        className="btn btn-primary float-end m-3"
+        onClick={handleLogTasks}
+      >
+        Save
+      </button>
     </>
   );
 }
