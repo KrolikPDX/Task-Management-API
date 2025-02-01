@@ -1,12 +1,11 @@
-import Task from './components/Tasks';
+import TaskList from "./components/TaskList";
 
 function App() {
-
   return (
-    <div>
-      <Task></Task>
+    <div className="container">
+      <TaskList></TaskList>
     </div>
   );
 }
 
-export default App
+export default App;
