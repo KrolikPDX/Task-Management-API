@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import TaskItem from "./TaskItem";
 import TaskModel from "../interfaces/TaskModel";
+import CreateTask from "./CreateTask";
 
 function TaskList() {
   const [tasks, setTasks] = useState<TaskModel[]>([]);
@@ -9,7 +10,6 @@ function TaskList() {
     const fetchTasks = async () => {
       //Add into try catch statement incase of failure in future
       const response = await fetch("http://localhost:3000/api/task");
-
       const data: TaskModel[] = await response.json();
       setTasks(data);
     };
@@ -17,28 +17,69 @@ function TaskList() {
     fetchTasks();
   }, []);
 
-  const handleLogTasks = () => {
-    console.log("Logging all task values:");
-    tasks.forEach((task) => {
-      console.log(
-        `Task ID: ${task.id}, Title: ${task.title}, Completed: ${task.completed}`
-      );
+  //Handle completion checkbox value change, update task via API automatically
+  const handleTaskCompletionChange = async (
+    taskId: number,
+    completed: boolean
+  ) => {
+    //Send API to update completion change for task
+    await fetch(`http://localhost:3000/api/task/${taskId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ completed: completed }),
     });
-  };
-
-  //Handle changes from child component (TaskItem)
-  const handleTaskCompletionChange = (taskId: number, completed: boolean) => {
     setTasks((prevTasks) =>
       prevTasks.map((task) =>
         task.id === taskId ? { ...task, completed } : task
+      )
+    );
+    //const data = await response.json();
+  };
+
+  const handleTitleSave = async (taskId: number, newTitle: string) => {
+    await fetch(`http://localhost:3000/api/task/${taskId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ title: newTitle }),
+    });
+    setTasks((prevTasks) =>
+      prevTasks.map((task) =>
+        task.id === taskId ? { ...task, title: newTitle } : task
+      )
+    );
+  };
+
+  const handleDescriptionSave = async (
+    taskId: number,
+    newDescription: string
+  ) => {
+    await fetch(`http://localhost:3000/api/task/${taskId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ description: newDescription }),
+    });
+    setTasks((prevTasks) =>
+      prevTasks.map((task) =>
+        task.id === taskId ? { ...task, description: newDescription } : task
       )
     );
   };
 
   return (
     <>
-      <div className="container mt-5">
-        <h2 className="text-center mb-4">Task List</h2>
+      <h2 className="text-center my-4">Task List</h2>
+      <div className="row my-4">
+        <div className="col">
+          <CreateTask></CreateTask>
+        </div>
+      </div>
+      <div className="row">
         {tasks.length === 0 ? (
           <p className="text-center text-muted">No tasks available.</p>
         ) : (
@@ -48,17 +89,13 @@ function TaskList() {
                 key={task.id}
                 {...task}
                 onCheckboxChange={handleTaskCompletionChange}
+                onTitleSave={handleTitleSave}
+                onDescriptionSave={handleDescriptionSave}
               />
             ))}
           </ul>
         )}
       </div>
-      <button
-        className="btn btn-primary float-end m-3"
-        onClick={handleLogTasks}
-      >
-        Save
-      </button>
     </>
   );
 }
