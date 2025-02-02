@@ -19,7 +19,7 @@ export class TaskController {
         return this.taskService.getTaskById(id).pipe(
             map((task) => {
                 if (!task) {
-                    throw new NotFoundException(`TEST COMMIT 2: Task '${id}' not found`);
+                    throw new NotFoundException(`TEST COMMIT: Task '${id}' not found`);
                 }
                 return task; 
             }),
