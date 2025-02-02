@@ -1,6 +1,3 @@
-import { useRef, useState } from "react";
-import TaskModel from "../interfaces/TaskModel";
-
 function CreateTask() {
   return (
     <>
