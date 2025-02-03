@@ -4,12 +4,13 @@ import TaskModel from "../interfaces/TaskModel";
 import CreateTask from "./CreateTask";
 
 function TaskList() {
+  const apiUrl = process.env.REACT_APP_API_URL;
   const [tasks, setTasks] = useState<TaskModel[]>([]);
 
   useEffect(() => {
     const fetchTasks = async () => {
       //Add into try catch statement incase of failure in future
-      const response = await fetch("http://localhost:3000/api/task");
+      const response = await fetch(apiUrl + "/api/task");
       const data: TaskModel[] = await response.json();
       setTasks(data);
     };
@@ -23,7 +24,7 @@ function TaskList() {
     completed: boolean
   ) => {
     //Send API to update completion change for task
-    await fetch(`http://localhost:3000/api/task/${taskId}`, {
+    await fetch(apiUrl + `/api/task/${taskId}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -39,7 +40,7 @@ function TaskList() {
   };
 
   const handleTitleSave = async (taskId: number, newTitle: string) => {
-    await fetch(`http://localhost:3000/api/task/${taskId}`, {
+    await fetch(apiUrl + `/api/task/${taskId}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -57,7 +58,7 @@ function TaskList() {
     taskId: number,
     newDescription: string
   ) => {
-    await fetch(`http://localhost:3000/api/task/${taskId}`, {
+    await fetch(apiUrl + `/api/task/${taskId}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
