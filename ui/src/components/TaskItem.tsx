@@ -9,6 +9,7 @@ function TaskItem({
   onCheckboxChange,
   onTitleSave,
   onDescriptionSave,
+  onDeleteClick,
 }: TaskModel) {
   const [isChecked, setIsChecked] = useState<boolean>(completed);
   const [editTitle, setEditTitle] = useState<boolean>(false);
@@ -36,32 +37,32 @@ function TaskItem({
   };
 
   const handleSaveTitle = () => {
-    //Prevent setting of empty title
-    if (!(inputTitleRef.current?.value === "")) {
-      onTitleSave(id, inputTitleRef.current?.value ?? "FAILED TO EDIT TITLE");
-      setEditTitle(false);
+    if (inputTitleRef.current?.value != "") {
+      onTitleSave(id, inputTitleRef.current!.value);
+    } else {
+      inputTitleRef.current!.value = title;
     }
+    setEditTitle(false);
   };
 
   const handleSaveDescription = () => {
-    if (!(inputDescriptionRef.current?.value === "")) {
-      onDescriptionSave(
-        id,
-        inputDescriptionRef.current?.value ?? "FAILED TO DESCRIPTION TITLE"
-      );
-      setEditDescription(false);
+    if (inputDescriptionRef.current?.value != "") {
+      onDescriptionSave(id, inputDescriptionRef.current!.value);
+    } else {
+      inputDescriptionRef.current!.value = description;
     }
+    setEditDescription(false);
   };
 
   const handleDeleteClick = () => {
-    console.log("Delete button clicked for " + title);
+    onDeleteClick(id);
   };
 
   return (
     <li className="list-group-item d-flex justify-content-between align-items-center">
-      <div className="row">
+      <div className="row flex-grow-1">
         <p>ID: {id}</p>
-        <div className="col-6">
+        <div className="col-10">
           {editTitle ? (
             <input
               className="form-control"
@@ -93,7 +94,7 @@ function TaskItem({
             </p>
           )}
         </div>
-        <div className="col-6">
+        <div className="col-2">
           {!isChecked && (editTitle || editDescription) && (
             <button
               className="btn btn-primary"
@@ -105,15 +106,14 @@ function TaskItem({
         </div>
       </div>
 
-      <div>
+      <div className="d-flex align-items-center">
         <input
           className="form-check-input mx-3"
           type="checkbox"
-          checked={isChecked}
-          value=""
           id={"checkbox-" + id}
+          checked={isChecked}
           disabled={editTitle || editDescription}
-          onChange={() => handleCheckboxChange()}
+          onChange={handleCheckboxChange}
         />
         <label className="form-check-label" htmlFor={"checkbox-" + id}>
           Completed

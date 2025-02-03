@@ -4,8 +4,7 @@ import TaskModel from "../interfaces/TaskModel";
 import CreateTask from "./CreateTask";
 
 function TaskList() {
-  const apiUrl = "https://api.josephdemyanovskiy.com";
-  console.log(apiUrl);
+  const apiUrl = import.meta.env.VITE_APP_API_URL;
   const [tasks, setTasks] = useState<TaskModel[]>([]);
 
   useEffect(() => {
@@ -18,6 +17,17 @@ function TaskList() {
 
     fetchTasks();
   }, []);
+
+  const handleAddTask = () => {
+    const fetchTasks = async () => {
+      //Add into try catch statement incase of failure in future
+      const response = await fetch(apiUrl + "/api/task");
+      const data: TaskModel[] = await response.json();
+      setTasks(data);
+    };
+
+    fetchTasks();
+  };
 
   //Handle completion checkbox value change, update task via API automatically
   const handleTaskCompletionChange = async (
@@ -73,12 +83,22 @@ function TaskList() {
     );
   };
 
+  const handleDeleteClick = async (taskId: number) => {
+    await fetch(apiUrl + `/api/task/${taskId}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    setTasks((prevItems) => prevItems.filter((item) => item.id !== taskId));
+  };
+  //prevTask.filter(item => item.id !== taskId);
   return (
     <>
       <h2 className="text-center my-4">Task List:</h2>
       <div className="row my-4">
         <div className="col">
-          <CreateTask></CreateTask>
+          <CreateTask handleAddTask={handleAddTask} />
         </div>
       </div>
       <div className="row">
@@ -93,6 +113,7 @@ function TaskList() {
                 onCheckboxChange={handleTaskCompletionChange}
                 onTitleSave={handleTitleSave}
                 onDescriptionSave={handleDescriptionSave}
+                onDeleteClick={handleDeleteClick}
               />
             ))}
           </ul>
