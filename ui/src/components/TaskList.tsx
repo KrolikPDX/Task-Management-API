@@ -75,7 +75,7 @@ function TaskList() {
 
   return (
     <>
-      <h2 className="text-center my-4">Task List</h2>
+      <h2 className="text-center my-4">Task List:</h2>
       <div className="row my-4">
         <div className="col">
           <CreateTask></CreateTask>
