@@ -4,7 +4,8 @@ import TaskModel from "../interfaces/TaskModel";
 import CreateTask from "./CreateTask";
 
 function TaskList() {
-  const apiUrl = process.env.REACT_APP_API_URL;
+  const apiUrl = "https://api.josephdemyanovskiy.com";
+  console.log(apiUrl);
   const [tasks, setTasks] = useState<TaskModel[]>([]);
 
   useEffect(() => {
