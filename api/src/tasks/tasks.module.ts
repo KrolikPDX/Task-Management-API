@@ -5,11 +5,9 @@ import { UserEntity } from 'src/user/models/user.entity';
 import { TaskController } from './controllers/task.controller';
 import { TaskService } from './services/task.service';
 
-
 @Module({
   imports: [
-    TypeOrmModule.forFeature([TaskEntity]),
-    TypeOrmModule.forFeature([UserEntity])
+    TypeOrmModule.forFeature([TaskEntity])
   ],
   controllers: [TaskController], //Controllers setup endpoints, handle request/response logic
   providers: [TaskService] //Services handle business logic (i.e. interact with DB - data processing, data fetching, etc)

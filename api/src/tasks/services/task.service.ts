@@ -1,7 +1,7 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, Repository, UpdateResult } from 'typeorm';
-import { Observable, from, map, mergeMap, of, throwError } from 'rxjs'
+import { Observable, from, map } from 'rxjs'
 import { TaskEntity } from '../models/task.entity';
 import { TaskModel } from '../models/task.interface';
 import { UserEntity } from 'src/user/models/user.entity';
@@ -10,10 +10,7 @@ import { UserEntity } from 'src/user/models/user.entity';
 export class TaskService {
     constructor(
         @InjectRepository(TaskEntity)
-        private readonly taskRepository: Repository<TaskEntity>,
-
-        @InjectRepository(UserEntity)
-        private readonly userRepository: Repository<UserEntity>
+        private readonly taskRepository: Repository<TaskEntity> 
     ) {}
 
     //Return all tasks found in DB
@@ -27,16 +24,8 @@ export class TaskService {
     }
 
     //Save given task to the DB
-    createTask(task: TaskModel): Observable<TaskModel | null>{
-        return from(this.userRepository.findOne({ where: { id: task.user_id } })).pipe(
-            mergeMap((user) => {
-              if (!user) {
-                return throwError(() => new NotFoundException(`User with ID ${task.user_id} not found`));
-              }
-              // User exists, proceed to save the task
-              return from(this.taskRepository.save(task));
-            })
-        );
+    createTask(task: TaskModel): Observable<TaskModel> {
+        return from(this.taskRepository.save(task)); //Convert returned value from promise to TaskModel object
     }
 
     updateTask(id: number, task: TaskModel): Observable<UpdateResult> { 
