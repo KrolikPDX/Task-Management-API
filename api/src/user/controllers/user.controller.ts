@@ -1,11 +1,8 @@
-import { Controller, Get, Post, Body, NotFoundException, BadRequestException, Param, Put, Delete } from '@nestjs/common';
-import { TaskService } from '../services/task.service';
-import { TaskModel } from '../models/task.interface';
+import { Controller, Get, Post, Body, NotFoundException, BadRequestException, Param, Put, Delete, Query } from '@nestjs/common';
 import { map, Observable } from 'rxjs';
-import { get } from 'http';
-import { DeleteResult, UpdateResult } from 'typeorm';
 import { UserModel } from '../models/user.interface';
 import { UserService } from '../services/user.service';
+import { TaskModel } from 'src/tasks/models/task.interface';
 
 @Controller('user')
 export class UserController {
@@ -14,6 +11,11 @@ export class UserController {
     @Get() //Returns list of all tasks
     getAllusers(): Observable<UserModel[]> {
         return this.userService.getAllUsers();
+    }
+
+    @Get('by-username')
+    getUserByUsername(@Query('username') username: string): Observable<UserModel | null> {
+        return this.userService.getIDFromUsername(username);
     }
 
     @Get(':id')
@@ -39,8 +41,6 @@ export class UserController {
             }),
         ); 
     }
-
-    
 
     @Post() //Creates user and adds it to DB
     createUser(@Body() user: UserModel): Observable<UserModel> { //From the body of the request, create a task given the object

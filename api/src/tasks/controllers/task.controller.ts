@@ -1,9 +1,8 @@
 import { Controller, Get, Post, Body, NotFoundException, BadRequestException, Param, Put, Delete } from '@nestjs/common';
+import { map, Observable } from 'rxjs';
+import { DeleteResult, UpdateResult } from 'typeorm';
 import { TaskService } from '../services/task.service';
 import { TaskModel } from '../models/task.interface';
-import { map, Observable } from 'rxjs';
-import { get } from 'http';
-import { DeleteResult, UpdateResult } from 'typeorm';
 
 @Controller('task')
 export class TaskController {

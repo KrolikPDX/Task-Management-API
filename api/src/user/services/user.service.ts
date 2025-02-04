@@ -1,11 +1,11 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, Repository, UpdateResult } from 'typeorm';
 import { Observable, from, map, mergeMap, throwError } from 'rxjs'
+import { TaskEntity } from '../../tasks/models/task.entity';
+import { TaskModel } from '../../tasks/models/task.interface';
 import { UserEntity } from '../models/user.entity';
 import { UserModel } from '../models/user.interface';
-import { TaskEntity } from '../models/task.entity';
-import { TaskModel } from '../models/task.interface';
 
 @Injectable()
 export class UserService {
@@ -40,5 +40,16 @@ export class UserService {
 
     getTasksForUser(id: number): Observable<TaskModel[] | null> {
         return from(this.taskRepository.find({where: { user_id: id }}))
+    }
+
+    getIDFromUsername(username: string): Observable<UserModel | null> {
+        return from(this.userRepository.findOne({ where: { username } })).pipe(
+            map((user) => {
+              if (!user) {
+                throw new NotFoundException(`User with username "${username}" not found`);
+              }
+              return user;
+            })
+        )
     }
 }

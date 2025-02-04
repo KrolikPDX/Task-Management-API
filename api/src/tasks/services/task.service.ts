@@ -4,7 +4,7 @@ import { DeleteResult, Repository, UpdateResult } from 'typeorm';
 import { Observable, from, map, mergeMap, of, throwError } from 'rxjs'
 import { TaskEntity } from '../models/task.entity';
 import { TaskModel } from '../models/task.interface';
-import { UserEntity } from '../models/user.entity';
+import { UserEntity } from 'src/user/models/user.entity';
 
 @Injectable()
 export class TaskService {

@@ -1,11 +1,10 @@
 import { Module } from '@nestjs/common';
-import { TaskService } from './services/task.service';
-import { UserService } from './services/user.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { TaskEntity } from './models/task.entity';
-import { TaskController } from './controllers/task.controller';
-import { UserController } from './controllers/user.controller';
 import { UserEntity } from './models/user.entity';
+import { TaskEntity } from 'src/tasks/models/task.entity';
+import { UserController } from './controllers/user.controller';
+import { UserService } from './services/user.service';
+
 
 @Module({
   imports: [
