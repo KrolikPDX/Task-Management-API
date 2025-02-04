@@ -27,9 +27,10 @@ export class TaskController {
     }
 
     @Post() //Creates new task and adds it to DB
-    createTask(@Body() task: TaskModel): Observable<TaskModel> { //From the body of the request, create a task given the object
+    createTask(@Body() task: TaskModel): Observable<TaskModel | null> { //From the body of the request, create a task given the object
         if (!task.title) throw new BadRequestException('Title is a required field.');
         if (!task.description) throw new BadRequestException('Description is a required field.');
+        if (!task.user_id) throw new BadRequestException('User_ID is a required field.');
         return this.taskService.createTask(task)
     }
 

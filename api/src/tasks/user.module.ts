@@ -9,10 +9,10 @@ import { UserEntity } from './models/user.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([TaskEntity]),
-    TypeOrmModule.forFeature([UserEntity])
+    TypeOrmModule.forFeature([UserEntity]),
+    TypeOrmModule.forFeature([TaskEntity])
   ],
-  controllers: [TaskController], //Controllers setup endpoints, handle request/response logic
-  providers: [TaskService] //Services handle business logic (i.e. interact with DB - data processing, data fetching, etc)
+  controllers: [UserController], //Controllers setup endpoints, handle request/response logic
+  providers: [UserService] //Services handle business logic (i.e. interact with DB - data processing, data fetching, etc)
 })
-export class TasksModule {}
+export class UserModule {}
