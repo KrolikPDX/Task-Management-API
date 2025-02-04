@@ -4,9 +4,6 @@ import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 export class TaskEntity {
     @PrimaryGeneratedColumn() //Generate unique id
     id: number;
-    
-    @Column()
-    user_id: number;
 
     @Column({ default: false})
     completed: boolean;

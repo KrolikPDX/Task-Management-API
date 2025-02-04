@@ -4,7 +4,6 @@ import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TasksModule } from './tasks/tasks.module';
-import { UserModule } from './tasks/user.module';
 
 @Module({
   imports: [
@@ -21,8 +20,7 @@ import { UserModule } from './tasks/user.module';
       autoLoadEntities: true,
       synchronize: true 
     }), 
-    TasksModule,
-    UserModule
+    TasksModule
   ],
   controllers: [AppController], //Controllers handles logic between requests/responses
   providers: [AppService], 

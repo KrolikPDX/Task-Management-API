@@ -18,7 +18,6 @@ function TaskList() {
     fetchTasks();
   }, []);
 
-  //In the future move all API requests into child element, and callback handleAddTask to update parent
   const handleAddTask = () => {
     const fetchTasks = async () => {
       //Add into try catch statement incase of failure in future
