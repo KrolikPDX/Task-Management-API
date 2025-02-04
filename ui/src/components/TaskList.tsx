@@ -22,7 +22,7 @@ function TaskList() {
   }, []);
 
   //In the future move all API requests into child element, and callback handleAddTask to update parent
-  //Refresh tasks by pulling again from server
+  //
   const handleRefreshTask = () => {
     const fetchTasks = async () => {
       //Add into try catch statement incase of failure in future
