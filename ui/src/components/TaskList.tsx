@@ -2,27 +2,31 @@ import { useEffect, useState } from "react";
 import TaskItem from "./TaskItem";
 import TaskModel from "../interfaces/TaskModel";
 import CreateTask from "./CreateTask";
+import { useLocation } from "react-router-dom";
+import User from "../interfaces/User";
 
 function TaskList() {
   const apiUrl = import.meta.env.VITE_APP_API_URL;
   const [tasks, setTasks] = useState<TaskModel[]>([]);
+  const location = useLocation();
+  const user: User = location.state?.user;
 
   useEffect(() => {
     const fetchTasks = async () => {
       //Add into try catch statement incase of failure in future
-      const response = await fetch(apiUrl + "/api/task");
+      const response = await fetch(`${apiUrl}/api/user/${user.id}/tasks`);
       const data: TaskModel[] = await response.json();
       setTasks(data);
     };
-
     fetchTasks();
   }, []);
 
   //In the future move all API requests into child element, and callback handleAddTask to update parent
-  const handleAddTask = () => {
+  //
+  const handleRefreshTask = () => {
     const fetchTasks = async () => {
       //Add into try catch statement incase of failure in future
-      const response = await fetch(apiUrl + "/api/task");
+      const response = await fetch(`${apiUrl}/api/user/${user.id}/tasks`);
       const data: TaskModel[] = await response.json();
       setTasks(data);
     };
@@ -96,10 +100,10 @@ function TaskList() {
   //prevTask.filter(item => item.id !== taskId);
   return (
     <>
-      <h2 className="text-center my-4">Task List:</h2>
+      <h2 className="text-center my-4">Task List for {user.username}:</h2>
       <div className="row my-4">
         <div className="col">
-          <CreateTask handleAddTask={handleAddTask} />
+          <CreateTask handleAddTask={handleRefreshTask} />
         </div>
       </div>
       <div className="row">

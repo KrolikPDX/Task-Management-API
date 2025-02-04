@@ -1,4 +1,6 @@
 import { useRef, useState } from "react";
+import { useLocation } from "react-router-dom";
+import User from "../interfaces/User";
 
 interface CreateTaskProps {
   handleAddTask: () => void;
@@ -6,6 +8,8 @@ interface CreateTaskProps {
 
 function CreateTask({ handleAddTask }: CreateTaskProps) {
   const apiUrl = import.meta.env.VITE_APP_API_URL;
+  const location = useLocation();
+  const user: User = location.state?.user;
   const [creatingTask, setCreatingTask] = useState<boolean>(false);
   const inputTitleRef = useRef<HTMLInputElement | null>(null);
   const inputDescriptionRef = useRef<HTMLInputElement | null>(null);
@@ -21,6 +25,7 @@ function CreateTask({ handleAddTask }: CreateTaskProps) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
+          user_id: user.id,
           title: inputTitleRef.current!.value,
           description: inputDescriptionRef.current!.value,
         }),
