@@ -65,8 +65,10 @@ function LoginPage() {
     <div className="d-flex justify-content-center align-items-center min-vh-100 bg-secondary">
       <div className="card shadow-lg p-4 rounded-4" style={{ width: "22rem" }}>
         <div className="card-body text-center">
-          <h2 className="card-title fw-bold text-dark">Welcome Back!</h2>
-          <p className="text-muted">Enter your username to continue</p>
+          <h2 className="card-title fw-bold text-dark">Task List App</h2>
+          <p className="text-muted">
+            Enter your username to continue (case sensitive)
+          </p>
           <input
             type="text"
             ref={userInputRef}
