@@ -1,12 +1,35 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
+import TaskModel from "../interfaces/TaskModel";
+import { useLocation } from "react-router-dom";
+import User from "../interfaces/User";
 
 const TaskListNew = () => {
-  // Simulated logged-in user
-  const user = { name: "John Doe" };
+  const apiUrl = import.meta.env.VITE_APP_API_URL;
+  const [tasks, setTasks] = useState<TaskModel[]>([]);
+  const user: User = useLocation().state?.user;
   const [showModal, setShowModal] = useState(false);
-  const [task, setTask] = useState({ title: "", description: "" });
   const [error, setError] = useState("");
+
+  //Initial refresh tasks upon load
+  useEffect(() => {
+    handleRefreshTask();
+  }, []);
+
+  //Gets list of all tasks for user
+  const handleRefreshTask = () => {
+    try {
+      const fetchTasks = async () => {
+        const response = await fetch(`${apiUrl}/api/user/${user.id}/tasks`);
+        const tasks: TaskModel[] = await response.json();
+        tasks.sort((a, b) => Number(a.completed) - Number(b.completed)); //Sort tasks by completed status (false = top)
+        setTasks(tasks);
+      };
+      fetchTasks();
+    } catch (error) {
+      console.log("Error fetching tasks: " + error);
+    }
+  };
 
   const handleCreateTask = () => {
     console.log("Create Task button clicked");
@@ -15,11 +38,12 @@ const TaskListNew = () => {
   };
 
   const handleSaveTask = () => {
+    /*
     if (!task.title.trim() || !task.description.trim()) {
       setError("Both title and description are required.");
       return;
     }
-    console.log("Task Saved:", task);
+      */
     setShowModal(false);
   };
 
@@ -32,7 +56,7 @@ const TaskListNew = () => {
       <div className="d-flex justify-content-between align-items-center mb-4">
         <h2>Task List</h2>
         <div>
-          <strong>Logged in as:</strong> {user.name}
+          <strong>Logged in as:</strong> {user.username}
         </div>
       </div>
 
@@ -69,16 +93,16 @@ const TaskListNew = () => {
                   type="text"
                   className="form-control mb-2"
                   placeholder="Task Title"
-                  value={task.title}
-                  onChange={(e) => setTask({ ...task, title: e.target.value })}
+                  //value={task.title}
+                  //onChange={(e) => setTask({ ...task, title: e.target.value })}
                 />
                 <textarea
                   className="form-control"
                   placeholder="Task Description"
-                  value={task.description}
-                  onChange={(e) =>
-                    setTask({ ...task, description: e.target.value })
-                  }
+                  //value={task.description}
+                  //onChange={(e) =>
+                  //setTasks({ ...tasks, description: e.target.value })
+                  //}
                 />
               </div>
               <div className="modal-footer">

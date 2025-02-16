@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import LoginPage from "./components/Login";
 import TaskList from "./components/TaskList";
+import TaskListNew from "./components/TaskListNew";
 
 function App() {
   return (
@@ -8,7 +9,7 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" element={<LoginPage />} />
-          <Route path="/tasks" element={<TaskList />} />
+          <Route path="/tasks" element={<TaskListNew />} />
         </Routes>
       </Router>
     </div>
