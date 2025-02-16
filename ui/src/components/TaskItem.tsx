@@ -6,21 +6,14 @@ function TaskItem({
   title,
   description,
   completed,
-  onCheckboxChange,
-  onTitleSave,
-  onDescriptionSave,
-  onDeleteClick,
+  handleRefreshTask,
 }: TaskModel) {
+  const apiUrl = import.meta.env.VITE_APP_API_URL;
   const [isChecked, setIsChecked] = useState<boolean>(completed);
   const [editTitle, setEditTitle] = useState<boolean>(false);
   const [editDescription, setEditDescription] = useState<boolean>(false);
   const inputTitleRef = useRef<HTMLInputElement | null>(null);
   const inputDescriptionRef = useRef<HTMLInputElement | null>(null);
-
-  const handleCheckboxChange = () => {
-    setIsChecked(!isChecked); // Toggle local checkbox state
-    onCheckboxChange(id, !isChecked); // Notify parent of the new state
-  };
 
   const handleClickTitle = () => {
     if (!isChecked) {
@@ -36,26 +29,64 @@ function TaskItem({
     }
   };
 
-  const handleSaveTitle = () => {
+  const handleCheckboxChange = async () => {
+    await fetch(apiUrl + `/api/task/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ completed: !isChecked }),
+    }).then(() => {
+      handleRefreshTask(); //Notify parent to refresh tasks
+      setIsChecked(!isChecked); //Toggle local checkbox state
+    });
+  };
+
+  const handleSaveTitle = async () => {
     if (inputTitleRef.current?.value != "") {
-      onTitleSave(id, inputTitleRef.current!.value);
+      await fetch(apiUrl + `/api/task/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ title: inputTitleRef.current!.value }),
+      }).then(() => {
+        handleRefreshTask(); //Notify parent to refresh tasks
+        setEditTitle(false);
+      });
     } else {
       inputTitleRef.current!.value = title;
     }
-    setEditTitle(false);
   };
 
-  const handleSaveDescription = () => {
+  const handleSaveDescription = async () => {
     if (inputDescriptionRef.current?.value != "") {
-      onDescriptionSave(id, inputDescriptionRef.current!.value);
+      await fetch(apiUrl + `/api/task/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          description: inputDescriptionRef.current!.value,
+        }),
+      }).then(() => {
+        handleRefreshTask(); //Notify parent to refresh tasks
+        setEditDescription(false);
+      });
     } else {
       inputDescriptionRef.current!.value = description;
     }
-    setEditDescription(false);
   };
 
-  const handleDeleteClick = () => {
-    onDeleteClick(id);
+  const handleDeleteClick = async () => {
+    await fetch(apiUrl + `/api/task/${id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }).then(() => {
+      handleRefreshTask(); //Notify parent to refresh tasks
+    });
   };
 
   return (

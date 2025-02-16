@@ -8,8 +8,7 @@ interface CreateTaskProps {
 
 function CreateTask({ handleAddTask }: CreateTaskProps) {
   const apiUrl = import.meta.env.VITE_APP_API_URL;
-  const location = useLocation();
-  const user: User = location.state?.user;
+  const user: User = useLocation().state?.user;
   const [creatingTask, setCreatingTask] = useState<boolean>(false);
   const inputTitleRef = useRef<HTMLInputElement | null>(null);
   const inputDescriptionRef = useRef<HTMLInputElement | null>(null);
@@ -29,11 +28,13 @@ function CreateTask({ handleAddTask }: CreateTaskProps) {
           title: inputTitleRef.current!.value,
           description: inputDescriptionRef.current!.value,
         }),
+      }).then(() => {
+        setCreatingTask(false);
+        handleAddTask();
       });
     }
-    setCreatingTask(false);
-    handleAddTask();
   };
+
   return (
     <>
       {creatingTask && (
